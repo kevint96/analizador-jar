@@ -211,7 +211,7 @@ if archivo:
             
             # Mostrar como HTML con saltos de l¨ªnea
             st.markdown(
-                df_unico.to_html(index=False).replace("\\n", "<br>"),
+                df_unico.to_html(index=False).encode("utf-8", "replace").decode("utf-8"),
                 unsafe_allow_html=True
             )
 
