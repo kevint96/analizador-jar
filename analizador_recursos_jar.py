@@ -143,9 +143,9 @@ def transformar_datos(file_list: list) -> pd.DataFrame:
 
 # ================= STREAMLIT APP =================
 
-st.title("??? Normalizador de artefactos OSB desde JAR")
+st.title("🗂️ Normalizador de artefactos OSB desde JAR")
 
-archivo = st.file_uploader("?? Carga tu archivo JAR", type=["jar"])
+archivo = st.file_uploader("▶️ Carga tu archivo JAR", type=["jar"])
 
 if archivo:
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -164,26 +164,26 @@ if archivo:
         # Detectar servicio (pipeline dentro de carpeta EXP/exp)
         servicio_detectado = obtener_nombre_servicio(file_list_legibles)
         if servicio_detectado:
-            st.success(f"? Servicio detectado: **{servicio_detectado}**")
+            st.success(f"✅ Servicio detectado: **{servicio_detectado}**")
             SERVICIO_GLOBAL = servicio_detectado
         else:
-            st.warning("?? No se encontro servicio con carpeta EXP o pipeline asociado.")
+            st.warning("⚠️ No se encontro servicio con carpeta EXP o pipeline asociado.")
             
             # Opcion de nombre de servicio manual
-            usar_manual = st.checkbox("?? Ingresar nombre del servicio manualmente")
+            usar_manual = st.checkbox("✏️ Ingresar nombre del servicio manualmente")
             if usar_manual:
                 servicio_manual = st.text_input("Nombre del servicio")
                 if servicio_manual:
                     SERVICIO_GLOBAL = servicio_manual
 
         #  Boton para ejecutar la transformacion
-        if st.button("?? Ejecutar transformacion"):
+        if st.button("🚀 Ejecutar transformacion"):
             df_transformado = transformar_datos(file_list)
 
             #  Ordenar el dataframe por la columna 'Ruta' (ascendente)
             df_transformado = df_transformado.sort_values(by="Ruta", ascending=True).reset_index(drop=True)
 
-            st.subheader("?? Datos transformados (ordenados por Ruta)")
+            st.subheader("🚀 Datos transformados (ordenados por Ruta)")
             st.dataframe(df_transformado)
 
             # ======================
@@ -194,12 +194,12 @@ if archivo:
                 df_transformado.to_excel(writer, index=False, sheet_name="Artefactos")
             output_normal.seek(0)
 
-            st.download_button(
-                label="Descargar Excel Normal",
-                data=output_normal.getvalue(),
-                file_name="artefactos_normalizados.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
+            # st.download_button(
+                # label="Descargar Excel Normal",
+                # data=output_normal.getvalue(),
+                # file_name="artefactos_normalizados.xlsx",
+                # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            # )
 
             # ======================
             #  Excel en una fila con \n
@@ -219,9 +219,9 @@ if archivo:
             with pd.ExcelWriter(output_mejorado, engine="openpyxl") as writer:
                 df_unico.to_excel(writer, index=False, sheet_name="Artefactos")
             output_mejorado.seek(0)
-
+            
             st.download_button(
-                label="?? Descargar Excel",
+                label="📥 Descargar Excel",
                 data=output_mejorado.getvalue(),
                 file_name="artefactos_unica_fila.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
