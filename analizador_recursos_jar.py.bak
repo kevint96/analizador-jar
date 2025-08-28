@@ -14,7 +14,7 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 import xml.etree.ElementTree as ET
 import gspread
-import time  # Importar el m贸dulo time
+import time  # Importar el modulo time
 import logging
 import inspect
 import ast
@@ -34,11 +34,11 @@ from io import BytesIO
 import io
 import html
 
-# 馃實 Variable global para el servicio detectado
+#  Variable global para el servicio detectado
 SERVICIO_GLOBAL = None
 
 def obtener_mapeo_nombres(jar_path):
-    """Lee ExportInfo del JAR y arma un mapeo jarentryname -> instanceId con extensi贸n"""
+    """Lee ExportInfo del JAR y arma un mapeo jarentryname -> instanceId con extension"""
     mapping = {}
     try:
         with zipfile.ZipFile(jar_path, "r") as jar:
@@ -49,7 +49,7 @@ def obtener_mapeo_nombres(jar_path):
                 root = ET.fromstring(xml_content)
                 ns = {"imp": "http://www.bea.com/wli/config/importexport"}
 
-                # Diccionario para mapear typeId -> extensi贸n
+                # Diccionario para mapear typeId -> extension
                 type_extensions = {
                     "WSDL": ".wsdl",
                     "ProxyService": ".proxy",
@@ -65,7 +65,7 @@ def obtener_mapeo_nombres(jar_path):
                     instance_id = item.attrib.get("instanceId")
                     type_id = item.attrib.get("typeId")
 
-                    # Asignar extensi贸n seg煤n typeId
+                    # Asignar extension seg煤n typeId
                     extension = type_extensions.get(type_id, "")
                     instance_id_ext = instance_id + extension
 
@@ -79,11 +79,11 @@ def obtener_mapeo_nombres(jar_path):
         st.warning(f"No se pudo leer ExportInfo: {e}")
     return mapping
 
-# 馃敼 Funci贸n para obtener el nombre del servicio desde el JAR
+#  Funcion para obtener el nombre del servicio desde el JAR
 def obtener_nombre_servicio(file_list: list) -> str:
     """
     Busca la carpeta con 'EXP' o 'exp' y obtiene el nombre del pipeline principal.
-    Retorna el nombre del servicio sin la extensi贸n (.pipeline).
+    Retorna el nombre del servicio sin la extension (.pipeline).
     """
     global SERVICIO_GLOBAL
     for ruta in file_list:
@@ -100,7 +100,7 @@ def obtener_nombre_servicio(file_list: list) -> str:
     return None
 
 
-# 馃敼 Transforma los artefactos y separa bien la ruta (sin el archivo)
+#  Transforma los artefactos y separa bien la ruta (sin el archivo)
 def transformar_datos(file_list: list) -> pd.DataFrame:
     registros = []
 
@@ -143,9 +143,9 @@ def transformar_datos(file_list: list) -> pd.DataFrame:
 
 # ================= STREAMLIT APP =================
 
-st.title("馃摝 Normalizador de artefactos OSB desde JAR")
+st.title("??? Normalizador de artefactos OSB desde JAR")
 
-archivo = st.file_uploader("馃摛 Carga tu archivo JAR", type=["jar"])
+archivo = st.file_uploader("?? Carga tu archivo JAR", type=["jar"])
 
 if archivo:
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -157,37 +157,37 @@ if archivo:
         with zipfile.ZipFile(jar_path, "r") as jar:
             file_list = jar.namelist()
 
-        # 馃攧 Aplicar mapeo ExportInfo (si existe)
+        #  Aplicar mapeo ExportInfo (si existe)
         mapping = obtener_mapeo_nombres(jar_path)
         file_list_legibles = [mapping.get(f, f) for f in file_list]
 
         # Detectar servicio (pipeline dentro de carpeta EXP/exp)
         servicio_detectado = obtener_nombre_servicio(file_list_legibles)
         if servicio_detectado:
-            st.success(f"鉁?Servicio detectado: **{servicio_detectado}**")
+            st.success(f"?Servicio detectado: **{servicio_detectado}**")
             SERVICIO_GLOBAL = servicio_detectado
         else:
-            st.warning("鈿狅笍 No se encontr贸 servicio con carpeta EXP o pipeline asociado.")
+            st.warning("?? No se encontro servicio con carpeta EXP o pipeline asociado.")
             
-            # Opci贸n de nombre de servicio manual
-            usar_manual = st.checkbox("鉁嶏笍 Ingresar nombre del servicio manualmente")
+            # Opcion de nombre de servicio manual
+            usar_manual = st.checkbox("?? Ingresar nombre del servicio manualmente")
             if usar_manual:
                 servicio_manual = st.text_input("Nombre del servicio")
                 if servicio_manual:
                     SERVICIO_GLOBAL = servicio_manual
 
-        # 馃敇 Bot贸n para ejecutar la transformaci贸n
-        if st.button("鈿?Ejecutar transformaci贸n"):
+        #  Boton para ejecutar la transformacion
+        if st.button("??Ejecutar transformacion"):
             df_transformado = transformar_datos(file_list)
 
-            # 馃憠 Ordenar el dataframe por la columna 'Ruta' (ascendente)
+            #  Ordenar el dataframe por la columna 'Ruta' (ascendente)
             df_transformado = df_transformado.sort_values(by="Ruta", ascending=True).reset_index(drop=True)
 
-            st.subheader("鉁?Datos transformados (ordenados por Ruta)")
+            st.subheader("??Datos transformados (ordenados por Ruta)")
             st.dataframe(df_transformado)
 
             # ======================
-            # 馃搶 Excel normal
+            #  Excel normal
             # ======================
             output_normal = io.BytesIO()
             with pd.ExcelWriter(output_normal, engine="openpyxl") as writer:
@@ -195,14 +195,14 @@ if archivo:
             output_normal.seek(0)
 
             # st.download_button(
-                # label="猬囷笍 Descargar Excel Normal",
+                # label="Descargar Excel Normal",
                 # data=output_normal.getvalue(),
                 # file_name="artefactos_normalizados.xlsx",
                 # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             # )
 
             # ======================
-            # 馃搶 Excel en una fila con \n
+            #  Excel en una fila con \n
             # ======================
             df_unico = pd.DataFrame({
                 "Servicio": ["\n".join(df_transformado["Servicio"].astype(str))],
@@ -210,19 +210,18 @@ if archivo:
                 "Artefacto": ["\n".join(df_transformado["Artefacto"].astype(str))]
             })
             
-            # # Mostrar como HTML con saltos de línea
-            # df_unico_safe = df_unico.applymap(lambda x: html.escape(str(x)))
-            # st.markdown(
-                # df_unico_safe.to_html(index=False).replace("\\n", "<br>"),
-                # unsafe_allow_html=True
-            # )
+            st.markdown(
+                df_unico.to_html(index=False).replace("\\n", "<br>"),
+                unsafe_allow_html=True
+            )
+            
             output_mejorado = io.BytesIO()
             with pd.ExcelWriter(output_mejorado, engine="openpyxl") as writer:
                 df_unico.to_excel(writer, index=False, sheet_name="Artefactos")
             output_mejorado.seek(0)
 
             st.download_button(
-                label="猬囷笍 Descargar Excel",
+                label="?? Descargar Excel",
                 data=output_mejorado.getvalue(),
                 file_name="artefactos_unica_fila.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
