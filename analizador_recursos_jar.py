@@ -32,6 +32,7 @@ from pathlib import Path
 import pandas as pd
 from io import BytesIO
 import io
+import html
 
 # üåç Variable global para el servicio detectado
 SERVICIO_GLOBAL = None
@@ -210,11 +211,11 @@ if archivo:
             })
             
             # Mostrar como HTML con saltos de l®™nea
+            df_unico_safe = df_unico.applymap(lambda x: html.escape(str(x)))
             st.markdown(
-                df_unico.to_html(index=False).encode("utf-8", "replace").decode("utf-8"),
+                df_unico_safe.to_html(index=False).replace("\\n", "<br>"),
                 unsafe_allow_html=True
             )
-
             output_mejorado = io.BytesIO()
             with pd.ExcelWriter(output_mejorado, engine="openpyxl") as writer:
                 df_unico.to_excel(writer, index=False, sheet_name="Artefactos")
