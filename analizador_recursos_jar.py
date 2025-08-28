@@ -178,7 +178,7 @@ if archivo:
 
         #  Boton para ejecutar la transformacion
         if st.button("🚀 Ejecutar transformacion"):
-            df_transformado = transformar_datos(file_list)
+            df_transformado = transformar_datos(file_list_legibles)
 
             #  Ordenar el dataframe por la columna 'Ruta' (ascendente)
             df_transformado = df_transformado.sort_values(by="Ruta", ascending=True).reset_index(drop=True)
