@@ -1,8 +1,5 @@
 streamlit
 python-docx
 gspread
-difflib
-base64
-tempfile
-pandas
 openpyxl
+pandas
