@@ -164,7 +164,7 @@ if archivo:
         # Detectar servicio (pipeline dentro de carpeta EXP/exp)
         servicio_detectado = obtener_nombre_servicio(file_list_legibles)
         if servicio_detectado:
-            st.success(f"?Servicio detectado: **{servicio_detectado}**")
+            st.success(f"? Servicio detectado: **{servicio_detectado}**")
             SERVICIO_GLOBAL = servicio_detectado
         else:
             st.warning("?? No se encontro servicio con carpeta EXP o pipeline asociado.")
@@ -177,13 +177,13 @@ if archivo:
                     SERVICIO_GLOBAL = servicio_manual
 
         #  Boton para ejecutar la transformacion
-        if st.button("??Ejecutar transformacion"):
+        if st.button("?? Ejecutar transformacion"):
             df_transformado = transformar_datos(file_list)
 
             #  Ordenar el dataframe por la columna 'Ruta' (ascendente)
             df_transformado = df_transformado.sort_values(by="Ruta", ascending=True).reset_index(drop=True)
 
-            st.subheader("??Datos transformados (ordenados por Ruta)")
+            st.subheader("?? Datos transformados (ordenados por Ruta)")
             st.dataframe(df_transformado)
 
             # ======================

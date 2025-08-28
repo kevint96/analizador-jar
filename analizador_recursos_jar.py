@@ -194,12 +194,12 @@ if archivo:
                 df_transformado.to_excel(writer, index=False, sheet_name="Artefactos")
             output_normal.seek(0)
 
-            # st.download_button(
-                # label="Descargar Excel Normal",
-                # data=output_normal.getvalue(),
-                # file_name="artefactos_normalizados.xlsx",
-                # mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            # )
+            st.download_button(
+                label="Descargar Excel Normal",
+                data=output_normal.getvalue(),
+                file_name="artefactos_normalizados.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
 
             # ======================
             #  Excel en una fila con \n
