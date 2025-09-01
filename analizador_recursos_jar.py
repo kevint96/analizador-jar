@@ -177,7 +177,7 @@ if archivo:
                     SERVICIO_GLOBAL = servicio_manual
 
         #  Boton para ejecutar la transformacion
-        if st.button("🚀 Ejecutar transformacion"):
+        if st.button("🚀 Analizar recursos"):
             df_transformado = transformar_datos(file_list_legibles)
 
             #  Ordenar el dataframe por la columna 'Ruta' (ascendente)
