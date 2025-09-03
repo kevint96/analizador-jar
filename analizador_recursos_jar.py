@@ -59,6 +59,7 @@ def obtener_mapeo_nombres(jar_path):
                     "XSLT": ".xsl",
                     "XQuery": ".xquery",
                     "JCA": ".jca",
+                    "DVM": ".dvm"
                 }
 
                 for item in root.findall("imp:exportedItemInfo", ns):

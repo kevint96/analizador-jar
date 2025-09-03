@@ -177,7 +177,7 @@ if archivo:
                     SERVICIO_GLOBAL = servicio_manual
 
         #  Boton para ejecutar la transformacion
-        if st.button("🚀 Ejecutar transformacion"):
+        if st.button("🚀 Analizar recursos"):
             df_transformado = transformar_datos(file_list_legibles)
 
             #  Ordenar el dataframe por la columna 'Ruta' (ascendente)
@@ -210,10 +210,44 @@ if archivo:
                 "Artefacto": ["\n".join(df_transformado["Artefacto"].astype(str))]
             })
             
+            # Convertir a HTML y aplicar estilos
+            html_table = df_unico.to_html(index=False).replace("\\n", "<br>")
+
+            # CSS para centrar y estilizar
             st.markdown(
-                df_unico.to_html(index=False).replace("\\n", "<br>"),
+                """
+                <style>
+                .styled-table {
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-collapse: collapse;
+                    font-size: 14px;
+                    min-width: 400px;
+                    max-width: 90%;
+                    word-wrap: break-word;
+                    white-space: pre-wrap;
+                    table-layout: fixed;
+                }
+                .styled-table th, .styled-table td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                    vertical-align: top;
+                    max-width: 300px;
+                }
+                .styled-table th {
+                    background-color: #f4f4f4;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                </style>
+                """,
                 unsafe_allow_html=True
             )
+
+            # Insertar tabla con clase CSS
+            st.markdown(f"<table class='styled-table'>{html_table.split('<table border=\"1\" class=\"dataframe\">')[1]}", unsafe_allow_html=True)
+
             
             output_mejorado = io.BytesIO()
             with pd.ExcelWriter(output_mejorado, engine="openpyxl") as writer:
